@@ -21,6 +21,7 @@ namespace TARge25Shop.SpaceshipTest
         {
             var services = new ServiceCollection();
             SetupServices(services);
+            serviceProvider = services.BuildServiceProvider();
         }
         /// <summary>
         /// Seame üles testide läbiviimiseks vajalikud teenused mujalt projektist
@@ -39,7 +40,7 @@ namespace TARge25Shop.SpaceshipTest
                 x =>
                 {
                     x.UseInMemoryDatabase("TEST");
-                    //vaigistame errorid
+                    //vaigistame errorid (kui andmebaasi CRUD ei toimi, siis DB errorit ei anna)
                     x.ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning));
                 }
                 );
