@@ -58,5 +58,62 @@ namespace TARge25Shop.SpaceshipTest
             // kontroll
             Assert.NotEqual(wrongGuid, goodGuid);
         }
+        // Seleta kodus lahti, nagu eelnevate testide laused, eesti keelde, selle testi oma ka.
+        [Fact]
+        public async Task Should_GetSpaceshipByID_WhenGuidIsEqual()
+        {
+            // ülessezade
+            Guid databaseGuid = Guid.Parse("ecbc059a-0bca-4df2-aae9-a3211e69185a");
+            Guid seekGuid = Guid.Parse("ecbc059a-0bca-4df2-aae9-a3211e69185a");
+
+            // tegevus
+            await Svc<ISpaceshipServices>().DetailAsync(seekGuid);
+
+            // kontroll
+            Assert.Equal(databaseGuid, seekGuid);
+        }
+
+        // Seleta kodus lahti, nagu eelnevate testide laused, eesti keelde, selle testi oma ka.
+        [Fact]
+        public async Task Should_SpaceshipDeletedByID_WhenReturnedResultIsEqual()
+        {
+            // ülesseade
+            SpaceshipDto dto = MockSpaceshipData();
+
+            // tegevus
+            var addSpaceship = await Svc<ISpaceshipServices>().Create(dto);
+            var deleteSpaceship = await Svc<ISpaceshipServices>().Delete((Guid)addSpaceship.Id);
+
+            // kontroll
+            Assert.Equal(addSpaceship.Id, deleteSpaceship.Id);
+        }
+
+        private SpaceshipDto MockSpaceshipData(bool isOneOrTwo = false)
+        {
+            if (isOneOrTwo == false)
+            {
+                return new SpaceshipDto
+                {
+                    Name = "X AE a L 12 menuornvöerv",
+                    ShipType = "lendav taldrik",
+                    Crew = 67,
+                    EnginePower = 69,//hobujõudu siis
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                };
+            }
+            else
+            {
+                return new SpaceshipDto
+                {
+                    Name = "RAKETT69",
+                    ShipType = "lendav kauss",
+                    Crew = 420,
+                    EnginePower = 999,//hobujõudu siis
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                };
+            }
+        }
     }
 }
