@@ -1,0 +1,63 @@
+﻿@model TARge25Shop.Models.Spaceship.SpaceshipDetailsViewModel
+
+<h1>Details</h1>
+
+<div>
+    <h4>Spaceship</h4>
+    <hr />
+    <dl class="row">
+        <div class="form-group row">
+            <label asp-for="Id" class="col-sm-2 col-form-label"></label>
+            @Html.DisplayFor(model => model.Id)
+        </div>
+    </dl>
+
+    <dl class="row">
+        <div class="form-group row">
+            <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+            @Html.DisplayFor(model => model.Name)
+        </div>
+    </dl>
+
+    <dl class="row">
+        <div class="form-group row">
+            <label asp-for="ShipType" class="col-sm-2 col-form-label"></label>
+            @Html.DisplayFor(model => model.ShipType)
+        </div>
+    </dl>
+
+    <dl class="row">
+        <div class="form-group row">
+            <label asp-for="Crew" class="col-sm-2 col-form-label"></label>
+            @Html.DisplayFor(model => model.Crew)
+        </div>
+    </dl>
+
+    <dl class="row">
+        <div class="form-group row">
+            <label asp-for="EnginePower" class="col-sm-2 col-form-label"></label>
+            @Html.DisplayFor(model => model.EnginePower)
+        </div>
+    </dl>
+
+    <dl class="row">
+        <div class="form-group row">
+            <label asp-for="CreatedAt" class="col-sm-2 col-form-label"></label>
+            @Html.DisplayFor(model => model.CreatedAt)
+        </div>
+    </dl>
+
+    <dl class="row">
+        <div class="form-group row">
+            <label asp-for="UpdatedAt" class="col-sm-2 col-form-label"></label>
+            @Html.DisplayFor(model => model.UpdatedAt)
+        </div>
+    </dl>
+
+    @foreach (var images in Model.Image)
+    {
+        <partial name="_Images" model="images" />
+    }
+
+    <a asp-action="Index" asp-controller="spaceship" class="btn btn-success">Back</a>
+</div>

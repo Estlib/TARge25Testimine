@@ -1,0 +1,47 @@
+﻿@model IEnumerable<TARge25Shop.Models.Spaceship.SpaceshipIndexViewModel>
+
+<div>
+    <a asp-action="create" asp-controller="spaceship" type="submit" class="btn btn-primary">Create</a>
+</div>
+
+@{
+    short rowNumber = 1;
+}
+
+
+<div class="h1">
+    Spaceships
+</div>
+<form method="get">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Nr</th>
+                <th scope="col">Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Built Date</th>
+                <th scope="col">Crew</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var spaceship in Model)
+            {
+                <tr>
+                    <td>@rowNumber</td>
+                    <td>@spaceship.Name</td>
+                    <td>@spaceship.ShipType</td>
+                    <td>@spaceship.CreatedAt</td>
+                    <td>@spaceship.Crew</td>
+                    <td>
+                        <a asp-action="details" asp-controller="spaceship" asp-route-id="@spaceship.Id" class="btn btn-primary">Details</a>
+                        <a asp-action="update" asp-controller="spaceship" asp-route-id="@spaceship.Id" class="btn btn-primary">Update</a>
+                        <a asp-action="delete" asp-controller="spaceship" asp-route-id="@spaceship.Id" class="btn btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+                rowNumber += 1;
+            }
+        </tbody>
+    </table>
+</form>
+
