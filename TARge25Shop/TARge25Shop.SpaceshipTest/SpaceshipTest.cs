@@ -136,10 +136,59 @@ namespace TARge25Shop.SpaceshipTest
             Assert.Equal(dto.CreatedAt, domain.CreatedAt);
             Assert.NotEqual(dto.UpdatedAt, domain.CreatedAt);
         }
+        [Fact]
+        public async Task ShouldNot_UpdateSpaceshipByID_WhenNoDataIsUpdated()
+        {
+            //ülesseade
+            SpaceshipDto dto = MockSpaceshipData();
+            var createdSpaceship = await Svc<ISpaceshipServices>().Create(dto);
+
+            //tegevus
+            SpaceshipDto nullDto = MockSpaceshipNullData();
+            var result = await Svc<ISpaceshipServices>().Update(nullDto);
+
+            //kontroll
+            Assert.NotEqual(createdSpaceship.Id, result.Id);
+        }
+        //kuna mootor ei saa olla negatiivse võimsusega, kontrollime et ei saaks
+        //lisada võimetut mootorit ega negatiivse võimsusega mootorit
+        [Fact]
+        public async Task ShouldNot_CreateSpaceshipWithNegativeEnginePower_WhenEnginePowerNegative()
+        {
+            //ülesseade
+            SpaceshipDto dto = MockSpaceshipData(true);
+            dto.EnginePower -= (dto.EnginePower * 2);
+
+            //tegevus
+            var result = await Svc<ISpaceshipServices>().Create(dto);
+
+            //kontroll
+            Assert.True(result.EnginePower > 0);
+        }
 
 
 
-            /* üleval testid, all abimeetodid */
+
+        /// <summary>
+        /// Returns a nulled object for testing purposes
+        /// </summary>
+        /// <returns></returns>
+        private SpaceshipDto MockSpaceshipNullData()
+        {
+            return new SpaceshipDto
+            {
+                Id = null,
+                Name = "",
+                ShipType = "",
+                Crew = 0,
+                EnginePower = 0,
+                CreatedAt = DateTime.MinValue,
+                UpdatedAt = DateTime.MinValue,
+            };
+        }
+
+
+        /* üleval testid, all abimeetodid */
 
         private SpaceshipDto MockSpaceshipData(bool isOneOrTwo = false)
         {
@@ -168,5 +217,6 @@ namespace TARge25Shop.SpaceshipTest
                 };
             }
         }
+
     }
 }
