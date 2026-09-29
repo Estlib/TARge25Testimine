@@ -42,6 +42,11 @@ namespace TARge25Shop.ApplicationServices.Services
             //saab kutsuda teise service classi meetotit
             //esile service classis
 
+            if (spaceShip.Crew < 4)
+            {
+                spaceShip.Crew = 4;
+            }
+
             _fileServices.FilesToApi(dto, spaceShip);
             if (spaceShip.EnginePower < 0)
             {

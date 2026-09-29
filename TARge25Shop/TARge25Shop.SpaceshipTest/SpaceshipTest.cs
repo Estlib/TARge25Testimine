@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Core.ServiceInterface;
@@ -166,6 +167,51 @@ namespace TARge25Shop.SpaceshipTest
             Assert.True(result.EnginePower > 0);
         }
 
+        //test mis kontrollib, et meeskond on suurem kui 3 liiget,
+        //service ei tohi lisada sellest vähema arvuga objekti, service
+        //võib selle probleemi lahendada ükskõik kuidas
+        [Fact]
+        public async Task ShouldNot_CreateSpaceship_WhenCrewIsThreeOrLess()
+        {
+            //ülesseade
+            SpaceshipDto dto = MockSpaceshipData();
+            dto.Crew = 0;
+            //tegevus
+            var result = await Svc<ISpaceshipServices>().Create(dto);
+            //kontroll
+            Assert.True(result.Crew > 3);
+        }
+
+        [Fact]
+        public async Task Should_RemoveSpaceshipFromDatabase_WhenSpaceshipIsDeleted()
+        {
+            //ülesseade
+            SpaceshipDto dto = MockSpaceshipData();
+
+            //tegevus
+            var createdSpaceship = await Svc<ISpaceshipServices>().Create(dto);
+            var deletedSpaceship = await Svc<ISpaceshipServices>().Delete((Guid)createdSpaceship.Id);
+            var result = await Svc<ISpaceshipServices>().DetailAsync((Guid)createdSpaceship.Id);
+
+            //kontrollimine
+            Assert.Equal(createdSpaceship.Id, deletedSpaceship.Id);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task ShouldNot_RemoveSpaceshipFromDatabase_WhenSpaceshipIdIsDifferent()
+        {
+            var dto = MockSpaceshipData();
+            var createdSpaceship1 = await Svc<ISpaceshipServices>().Create(dto);
+            var createdSpaceship2 = await Svc<ISpaceshipServices>().Create(dto);
+            var deleteResult = await Svc<ISpaceshipServices>().Delete((Guid)createdSpaceship2.Id);
+            var spaceshipindb = await Svc<ISpaceshipServices>().DetailAsync((Guid)createdSpaceship1.Id);
+
+            //kontroll
+            Assert.NotNull(spaceshipindb);
+            Assert.NotEqual(deleteResult.Id, createdSpaceship1.Id);
+            Assert.Equal(createdSpaceship1, spaceshipindb);
+        }
 
 
 
