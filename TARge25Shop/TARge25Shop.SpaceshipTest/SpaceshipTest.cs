@@ -59,6 +59,7 @@ namespace TARge25Shop.SpaceshipTest
             Assert.NotEqual(wrongGuid, goodGuid);
         }
         // Seleta kodus lahti, nagu eelnevate testide laused, eesti keelde, selle testi oma ka.
+        // Selles testis kontrollitakse et kosmoselaeva päringul andmebaasist peaks tagastama objekti siis kui ID on sama
         [Fact]
         public async Task Should_GetSpaceshipByID_WhenGuidIsEqual()
         {
@@ -74,6 +75,7 @@ namespace TARge25Shop.SpaceshipTest
         }
 
         // Seleta kodus lahti, nagu eelnevate testide laused, eesti keelde, selle testi oma ka.
+        // Selles testis kontrollitakse et kosmoselaeva kustutamisel andmebaasist peaks kustuma objekt kui tagastatav väärtus on sama
         [Fact]
         public async Task Should_SpaceshipDeletedByID_WhenReturnedResultIsEqual()
         {
@@ -87,6 +89,24 @@ namespace TARge25Shop.SpaceshipTest
             // kontroll
             Assert.Equal(addSpaceship.Id, deleteSpaceship.Id);
         }
+
+        [Fact]
+        public async Task ShouldNot_DeleteSpaceshipByID_WhenDidNotDeleteSpaceship()
+        {
+            //ülesseade
+            var dto = MockSpaceshipData();
+
+            //tegevus
+            var spaceShip1 = await Svc<ISpaceshipServices>().Create(dto);
+            var spaceShip2 = await Svc<ISpaceshipServices>().Create(dto);
+
+            var result = await Svc<ISpaceshipServices>().Delete((Guid)spaceShip2.Id);
+
+            //kontroll
+            Assert.NotEqual(spaceShip1.Id, result.Id);
+        }
+
+            /* üleval testid, all abimeetodid */
 
         private SpaceshipDto MockSpaceshipData(bool isOneOrTwo = false)
         {
