@@ -105,6 +105,39 @@ namespace TARge25Shop.SpaceshipTest
             //kontroll
             Assert.NotEqual(spaceShip1.Id, result.Id);
         }
+        // test mis kontrollib, et spaceshipi uuendatakse, uute andmete korral
+        [Fact]
+        public async Task Should_UpdateSpaceshipByID_WhenUpdatingData()
+        {
+            //ülesseade
+            var guid = new Guid("68eb8abd-086a-4c8b-9695-71234143f709");
+
+            SpaceshipDto dto = MockSpaceshipData();
+
+            SpaceshipDto domain = new();
+
+            domain.Id = Guid.Parse("68eb8abd-086a-4c8b-9695-71234143f709");
+            domain.EnginePower = 10000000;
+            domain.Name = "Igor Mang 2";
+            domain.ShipType = "püramiid";
+            domain.Crew = 420;
+            domain.CreatedAt = dto.CreatedAt;//  <-- ei tohi muutuda Update korral, tuleb võtta olemasolevast objektist.
+            domain.UpdatedAt = DateTime.UtcNow;//  <-- PEAB muutuma Update korral
+
+            //tegevus
+            await Svc<ISpaceshipServices>().Update(dto);
+
+            //kontroll
+            Assert.Equal(domain.Id, guid);
+            Assert.NotEqual(dto.EnginePower, domain.EnginePower);
+            Assert.NotEqual(dto.Name, domain.Name);
+            Assert.DoesNotMatch(dto.Crew.ToString(), domain.Crew.ToString());
+            Assert.DoesNotMatch(dto.ShipType, domain.ShipType);
+            Assert.Equal(dto.CreatedAt, domain.CreatedAt);
+            Assert.NotEqual(dto.UpdatedAt, domain.CreatedAt);
+        }
+
+
 
             /* üleval testid, all abimeetodid */
 
