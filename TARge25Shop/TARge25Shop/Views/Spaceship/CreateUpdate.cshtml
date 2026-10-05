@@ -21,28 +21,28 @@ else
     <div class="form-group row">
         <label asp-for="Name" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input asp-for="Name" class="form-control" />
+            <input asp-for="Name" id="CU_NameEntrySpaceship" class="form-control" />
         </div>
     </div>
 
     <div class="form-group row">
         <label asp-for="ShipType" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input asp-for="ShipType" class="form-control" />
+            <input asp-for="ShipType" id="CU_ShipTypeEntrySpaceship"  class="form-control" />
         </div>
     </div>
 
     <div class="form-group row">
         <label asp-for="Crew" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input asp-for="Crew" class="form-control" />
+            <input asp-for="Crew" id="CU_CrewEntrySpaceship" class="form-control" />
         </div>
     </div>
 
     <div class="form-group row">
         <label asp-for="EnginePower" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input asp-for="EnginePower" class="form-control" />
+            <input asp-for="EnginePower" id="CU_EnginePowerEntrySpaceship" class="form-control" />
         </div>
     </div>
 
@@ -50,7 +50,7 @@ else
         <label asp-for="Files" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-5">
             <div class="custom-file">
-                <input class="form-control" asp-for="Files" multiple type="file" />
+                <input class="form-control" id="CU_FilesEntrySpaceship" asp-for="Files" multiple type="file" />
             </div>
         </div>
     </div>
@@ -62,12 +62,12 @@ else
 
     @if (Model.Id.HasValue)
     {
-        <input asp-action="update" asp-controller="spaceship" type="submit" class="btn btn-success" value="Update" />
+        <input asp-action="update" asp-controller="spaceship" id="CU_UpdateSpaceship" type="submit" class="btn btn-success" value="Update" />
     }
     else
     {
-        <input asp-action="create" asp-controller="spaceship" type="submit" class="btn btn-success" value="Create" />
+        <input asp-action="create" asp-controller="spaceship" id="CU_CreateSpaceship" type="submit" class="btn btn-success" value="Create" />
     }
 
-    <a asp-action="Index" asp-controller="spaceship" class="btn btn-secondary">Back to List</a>
+    <a asp-action="Index" asp-controller="spaceship" id="CU_Back" class="btn btn-secondary">Back to List</a>
 </form>
