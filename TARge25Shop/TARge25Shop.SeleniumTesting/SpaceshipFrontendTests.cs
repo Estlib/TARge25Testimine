@@ -44,7 +44,7 @@ namespace TARge25Shop.SeleniumTesting
         }
 
         [Fact]
-        public void Should_NavigateToDetails_OfASpaceShip_WithPreviouslyCorrectData_AndReturnToIndex()
+        public void Should_NavigateToDetails_OfASpaceShip_WithPreviouslyCorrectData()
         {
             //ülesseade
             IWebDriver driver = SetupAndNavigateSIndex();
@@ -62,8 +62,7 @@ namespace TARge25Shop.SeleniumTesting
                 var locatedelement = row.FindElement(By.Id("IndexNameSpaceship"));
                 if (locatedelement.Text == "i add name for spaceship") 
                 {
-            //        //siis vajuta selles reas asuvat details nuppu
-            //        row.FindElement(By.Id("IndexSpaceshipDetails")).Click();
+                    //siis vajuta selles reas asuvat details nuppu
                     var rowelement = row.FindElement(By.Id("IndexActionsSpaceship"));
                     var button = rowelement.FindElement(By.Id("IndexSpaceshipDetails"));
                     button.Click();
@@ -97,6 +96,46 @@ namespace TARge25Shop.SeleniumTesting
             Assert.Equal("12345", details_crew);
             Assert.Equal("666667", details_power);
         }
+
+        [Fact]
+        public void Should_UpdateDetails_OfASpaceShip_WithNewData()
+        {
+            //ülesseade
+            IWebDriver driver = SetupAndNavigateSIndex();
+
+            //otsime üles kõik tabeli read, rida htmli tabelis tähistatakse "tr"iga
+            //ICollection<IWebElement> table = driver.FindElements(By.TagName("tr"));
+            var table = driver.FindElement(By.Id("IndexTable"));
+            List<IWebElement> rows = table.FindElements(By.TagName("tr")).ToList();
+            rows.RemoveAt(0);
+            //tsükkel käib kõik read läbi
+
+            foreach (var row in rows)
+            {
+
+                var locatedelement = row.FindElement(By.Id("IndexNameSpaceship"));
+                if (locatedelement.Text == "i add name for spaceship")
+                {
+                    //siis vajuta selles reas asuvat details nuppu
+                    var rowelement = row.FindElement(By.Id("IndexActionsSpaceship"));
+                    var button = rowelement.FindElement(By.Id("IndexSpaceshipUpdate"));
+                    button.Click();
+                    //pärast õiget vajutust, tsükkel katkestatakse
+                    //arvuti tudub
+                    Thread.Sleep(500);
+                    break;
+                }
+            }
+            //sisestatavad andmed
+            InsertSpaceShipData(driver, true);
+
+            IWebElement cu_CreateSpaceship = driver.FindElement(By.Id("CU_CreateSpaceship"));
+            cu_CreateSpaceship.Click();
+
+            //arvuti tudub
+            Thread.Sleep(1000);
+        }
+
         private static IWebDriver SetupAndNavigateSIndex()
         {
             //firefoxi käskiv ja juhtiv draiver
