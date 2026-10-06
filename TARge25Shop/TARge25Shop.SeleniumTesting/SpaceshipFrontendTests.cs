@@ -12,14 +12,10 @@ namespace TARge25Shop.SeleniumTesting
         [Fact]
         public void Should_NavigateToCreate_AddSpaceShip_WithCorrectData_ReturnToIndex()
         {
-            //firefoxi käskiv ja juhtiv draiver
-            IWebDriver driver = new FirefoxDriver();
-            //aadress millele draiver navigeerib
-            driver.Url = "https://localhost:7227/";
-            //lehelt otsitav element
-            IWebElement navigateToSpaceship = driver.FindElement(By.LinkText("Spaceship"));
-            //selle elemendiga tehtav tegevus
-            navigateToSpaceship.Click();
+            //ülesseade
+            IWebDriver driver = SetupAndNavigateSIndex();
+
+            //tegevus
             IWebElement createInIndex = driver.FindElement(By.Id("CreateInIndex"));
             createInIndex.Click();
 
@@ -31,6 +27,7 @@ namespace TARge25Shop.SeleniumTesting
 
             //arvuti tudub
             Thread.Sleep(1000);
+
             //andmete kogumine pärast reloadi
             IWebElement indexNameSpaceship = driver.FindElement(By.Id("IndexNameSpaceship"));
             var spaceShipNameData = indexNameSpaceship.Text;
@@ -44,6 +41,26 @@ namespace TARge25Shop.SeleniumTesting
             Assert.True(spaceShipTypeData == "i add ship type for spaceship");
             Assert.Equal(spaceShipCrewData, "12345");
         }
+
+        [Fact]
+        public void Should_NavigateToDetails_OfASpaceShip_WithPreviouslyCorrectData_AndReturnToIndex()
+        {
+            //ülesseade
+            IWebDriver driver = SetupAndNavigateSIndex();
+        }
+        private static IWebDriver SetupAndNavigateSIndex()
+        {
+            //firefoxi käskiv ja juhtiv draiver
+            IWebDriver driver = new FirefoxDriver();
+            //aadress millele draiver navigeerib
+            driver.Url = "https://localhost:7227/";
+            //lehelt otsitav element
+            IWebElement navigateToSpaceship = driver.FindElement(By.LinkText("Spaceship"));
+            //selle elemendiga tehtav tegevus
+            navigateToSpaceship.Click();
+            return driver;
+        }
+
 
         private void InsertSpaceShipData(IWebDriver driver)
         {
