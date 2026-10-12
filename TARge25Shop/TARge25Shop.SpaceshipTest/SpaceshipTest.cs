@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Core.ServiceInterface;
+using TARge25Shop.Data;
 using Xunit;
 
 namespace TARge25Shop.SpaceshipTest
@@ -128,6 +129,7 @@ namespace TARge25Shop.SpaceshipTest
             //tegevus
             await Svc<ISpaceshipServices>().Update(domain);
             //kill first connection: added tracker clearing to update
+            Svc<TARge25ShopContext>().ChangeTracker.Clear();
             var result2 = await Svc<ISpaceshipServices>().DetailAsync(guid);
 
             //kontroll

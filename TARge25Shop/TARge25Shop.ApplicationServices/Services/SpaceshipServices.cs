@@ -76,7 +76,6 @@ namespace TARge25Shop.ApplicationServices.Services
             spaceShip.UpdatedAt = DateTime.Now;
 
             //andmete uuendamine andmebaasis
-            _context.ChangeTracker.Clear();
             _context.Spaceships.Update(spaceShip);
             await _context.SaveChangesAsync();
 
