@@ -133,7 +133,7 @@ namespace TARge25Shop.SpaceshipTest
             var result2 = await Svc<ISpaceshipServices>().DetailAsync(guid);
 
             //kontroll
-            Assert.Equal(domain.Id, result2.Id);
+            Assert.Equal(result.Id, result2.Id);
             Assert.NotEqual(dto.EnginePower, result2.EnginePower);
             Assert.NotEqual(dto.Name, result2.Name);
             Assert.DoesNotMatch(dto.Crew.ToString(), result2.Crew.ToString());
