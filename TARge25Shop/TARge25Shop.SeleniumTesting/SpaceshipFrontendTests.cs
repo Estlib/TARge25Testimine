@@ -5,12 +5,47 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Xunit;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace TARge25Shop.SeleniumTesting
 {
+    //järjesti
+    public class OrderAttribute : Attribute
+    {
+        public int Value { get;}
+        public OrderAttribute(int value)
+        {
+            Value = value;
+        }
+    }
+
+    public class PriorityOrderer : ITestCaseOrderer
+    {
+        public IEnumerable<TTestCase> OrderTestCases<TTestCase>(IEnumerable<TTestCase> testCases)
+            where TTestCase : ITestCase
+        {
+            return testCases.OrderBy(test =>
+            {
+                var method = test.TestMethod.Method.GetCustomAttributes(typeof(OrderAttribute)).FirstOrDefault();
+
+                if (method == null)
+                {
+                    return int.MaxValue;
+                }
+                else
+                {
+                    return method.GetNamedArgument<int>(nameof(OrderAttribute.Value));
+                }
+            }).ToList();
+        }
+    }
+
+    [TestCaseOrderer("TARge25Shop.SeleniumTesting.PriorityOrderer", "TARge25Shop.SeleniumTesting")]
     public class SpaceshipFrontendTests
     {
         [Fact]
+        [Order(1)]
         public void Should_NavigateToCreate_AddSpaceShip_WithCorrectData_ReturnToIndex()
         {
             //ülesseade
@@ -26,8 +61,8 @@ namespace TARge25Shop.SeleniumTesting
             IWebElement cu_CreateSpaceship = driver.FindElement(By.Id("CU_CreateSpaceship"));
             cu_CreateSpaceship.Click();
 
-            //arvuti tudub
-            Thread.Sleep(1000);
+            ////arvuti tudub
+            //Thread.Sleep(1000);
 
             //andmete kogumine pärast reloadi
             IWebElement indexNameSpaceship = driver.FindElement(By.Id("IndexNameSpaceship"));
@@ -44,6 +79,7 @@ namespace TARge25Shop.SeleniumTesting
         }
 
         [Fact]
+        [Order(2)]
         public void Should_NavigateToDetails_OfASpaceShip_WithPreviouslyCorrectData()
         {
             //ülesseade
@@ -98,6 +134,7 @@ namespace TARge25Shop.SeleniumTesting
         }
 
         [Fact]
+        [Order(3)]
         public void Should_UpdateDetails_OfASpaceShip_WithNewData()
         {
             //ülesseade
@@ -132,11 +169,12 @@ namespace TARge25Shop.SeleniumTesting
             IWebElement cu_CreateSpaceship = driver.FindElement(By.Id("CU_UpdateSpaceship"));
             cu_CreateSpaceship.Click();
 
-            //arvuti tudub
-            Thread.Sleep(1000);
+            ////arvuti tudub
+            //Thread.Sleep(1000);
         }
 
         [Fact]
+        [Order(4)]
         public void Should_DeleteSpaceship_FromAppVIADeleteView()
         {
             //ülesseade
