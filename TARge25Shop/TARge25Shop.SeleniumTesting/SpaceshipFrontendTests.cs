@@ -140,6 +140,7 @@ namespace TARge25Shop.SeleniumTesting
                 var locatedelement = row.FindElement(By.Id("IndexNameSpaceship"));
                 if (locatedelement.Text == thisRunGuid) 
                 {
+                    isObjectFound = true;
                     //siis vajuta selles reas asuvat details nuppu
                     var rowelement = row.FindElement(By.Id("IndexActionsSpaceship"));
                     var button = rowelement.FindElement(By.Id("IndexSpaceshipDetails"));
