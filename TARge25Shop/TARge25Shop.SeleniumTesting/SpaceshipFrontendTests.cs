@@ -54,6 +54,8 @@ namespace TARge25Shop.SeleniumTesting
     [TestCaseOrderer("TARge25Shop.SeleniumTesting.PriorityOrderer", "TARge25Shop.SeleniumTesting")]
     public class SpaceshipFrontendTests
     {
+        public static string thisRunGuid {  get; set; }
+
         [Fact]
         [Order(1)] //järjesti millel on väärtus "1", järjestatakse väiksem enne.
         public void Should_NavigateToCreate_AddSpaceShip_WithCorrectData_ReturnToIndex()
@@ -89,7 +91,7 @@ namespace TARge25Shop.SeleniumTesting
         }
         [Fact]
         [Order(5)] 
-        public void Should_NavigateToCreate_AddSpaceShip_WithCorrectData_ReturnToIndex_Proper()
+        public void Should_NavigateToCreate_AddUniqueSpaceShip_WithCorrectData_ReturnToIndex()
         {
             //ülesseade
             IWebDriver driver = SetupAndNavigateSIndex();
@@ -100,6 +102,7 @@ namespace TARge25Shop.SeleniumTesting
 
             //sisestatavad andmed, siin tagastub ka kasutatud nimi
             string concreteName = InsertSpaceShipData_ReturnName(driver, false);
+            thisRunGuid = concreteName;
 
             IWebElement cu_CreateSpaceship = driver.FindElement(By.Id("CU_CreateSpaceship"));
             cu_CreateSpaceship.Click();
@@ -108,35 +111,43 @@ namespace TARge25Shop.SeleniumTesting
             //Thread.Sleep(1000);
 
             //andmete kogumine pärast reloadi
-            IWebElement indexNameSpaceship = driver.FindElement(By.Id("IndexNameSpaceship"));
-            var spaceShipNameData = indexNameSpaceship.Text;
-            IWebElement indexTypeSpaceship = driver.FindElement(By.Id("IndexTypeSpaceship"));
-            var spaceShipTypeData = indexTypeSpaceship.Text;
-            IWebElement indexCrewSpaceship = driver.FindElement(By.Id("IndexCrewSpaceship"));
-            var spaceShipCrewData = indexCrewSpaceship.Text;
+            var tableOfIndex = driver.FindElement(By.Id("IndexTable"));
+            List<IWebElement> rowsOfTable = tableOfIndex.FindElements(By.TagName("tr")).ToList();
+            rowsOfTable.RemoveAt(0);
+            string spaceShipNameData = "";
+            string spaceShipTypeData = "";
+            string spaceShipCrewData = "";
+            string spaceShipBuiltAtData = "";
+            //IWebElement indexNameSpaceship = driver.FindElement(By.Id("IndexNameSpaceship"));
+            //var spaceShipNameData = indexNameSpaceship.Text;
+            //IWebElement indexTypeSpaceship = driver.FindElement(By.Id("IndexTypeSpaceship"));
+            //var spaceShipTypeData = indexTypeSpaceship.Text;
+            //IWebElement indexCrewSpaceship = driver.FindElement(By.Id("IndexCrewSpaceship"));
+            //var spaceShipCrewData = indexCrewSpaceship.Text;
             bool doesItExist = false;
-
-            //otsi kõik read,
-            var table = driver.FindElement(By.Id("IndexTable"));
-            List<IWebElement> rows = table.FindElements(By.TagName("tr")).ToList();
-            //otsi nime elemendist concreteName võrdlusega
-            foreach (var row in rows)
+            foreach (var row in rowsOfTable)
             {
-                var locatedelement = row.FindElement(By.Id("IndexNameSpaceship"));
-                if (locatedelement.Text == concreteName)
+                if (row.FindElement(By.Id("IndexNameSpaceship")).Text == thisRunGuid)
                 {
                     doesItExist = true;
+                    spaceShipNameData = thisRunGuid;
+                    spaceShipTypeData = row.FindElement(By.Id("IndexTypeSpaceship")).Text;
+                    spaceShipCrewData = row.FindElement(By.Id("IndexCrewSpaceship")).Text;
+                    spaceShipBuiltAtData = row.FindElement(By.Id("IndexBuiltDateSpaceship")).Text;
                     break;
                 }
             }
-            //kui on doesitexist on true
+            driver.Quit();
 
             //kontroll
             //Assert.True(concreteName == indexNameSpaceship.Text);
             Assert.True(true == doesItExist);
-            Assert.Equal(spaceShipNameData, "i add name for spaceship");
+            Assert.Equal(spaceShipNameData, thisRunGuid);
             Assert.True(spaceShipTypeData == "i add ship type for spaceship");
             Assert.Equal(spaceShipCrewData, "12345");
+            Assert.True((thisRunGuid == spaceShipNameData)
+                && ("i add ship type for spaceship" == spaceShipTypeData)
+                && ("12345" == spaceShipCrewData));
         }
 
         [Fact]
